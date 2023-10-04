@@ -101,7 +101,7 @@ export function HomePage(){
             </div>
             </section>
 
-            <section className="section__container choose__container" id="choose">
+            <section className="section__container choose__container">
                 <img className="choose__bg" src="assets/dot-bg.png" alt="bg" />
                 <div className="choose__content">
                     <h2 className="section__header">Why Choose Our Cello Tapes</h2>
@@ -192,13 +192,13 @@ export function HomePage(){
                 <footer className="footer">
                 <div className="section__container footer__container">
                     <div className="footer__logo">
-                        <h4><a href="#">Karur Polymers</a></h4>
+                        <h4><a href="#home">Karur Polymers</a></h4>
                         <p>Copyright © 2023 Cello Tape Sales. All rights reserved.</p>
                     </div>
                     <ul className="footer__nav">
-                        <li className="footer__link"><a href="#">About</a></li>
-                        <li className="footer__link"><a href="#">Contact</a></li>
-                        <li className="footer__link"><a href="#">Privacy Policy</a></li>
+                        <li className="footer__link"><a href="#choose">About</a></li>
+                        <li className="footer__link"><a href="#contact">Contact</a></li>
+                        <li className="footer__link"><a href="#privacy">Privacy Policy</a></li>
                     </ul>
                 </div>
             </footer>
