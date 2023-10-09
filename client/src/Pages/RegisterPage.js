@@ -36,7 +36,7 @@ export function RegisterPage() {
     }
 
     if (Object.keys(errors).length === 0) {
-      axios.post('http://localhost:3001/register',{name,email,phone,password})
+      axios.post('https://karur-polymers.netlify.app/register',{name,email,phone,password})
       .then((result)=>{
         console.log(result)
         navigate("/login")
