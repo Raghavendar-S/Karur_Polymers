@@ -47,7 +47,7 @@ export function LoginPage() {
 
     if (Object.keys(errors).length === 0) {
       try{
-        const response = await axios.post('https://karur-polymers.netlify.app/login',{email,password})
+        const response = await axios.post('http://localhost:3001/register',{email,password})
         const token = response.data.token
         localStorage.setItem('token',token)
         navigate("/dashboard");
