@@ -1,0 +1,22 @@
+.admin_container {
+    margin: 3rem;
+    padding: 3rem;
+}
+
+.card {
+  width: 100%;
+  padding: 3rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+  font-size: 18px;
+  margin: 0;
+}
+
+.row{
+    display: flex;
+}

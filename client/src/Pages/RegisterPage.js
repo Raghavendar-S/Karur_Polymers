@@ -3,6 +3,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import '../Components/LoginRegister.css'
 import TextField from "@mui/material/TextField";
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -13,9 +14,10 @@ export function RegisterPage() {
     phone: "",
     password: "",
     confirmPassword: "",
+    answer: "",
   });
 
-  const {name,email,phone,password} = formData;
+  const {name,email,phone,password,answer} = formData;
 
   const [errors, setErrors] = useState({});
 
@@ -27,7 +29,7 @@ export function RegisterPage() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const errors = {};
     
@@ -36,20 +38,28 @@ export function RegisterPage() {
     }
 
     if (Object.keys(errors).length === 0) {
-      axios.post('http://localhost:3001/register',{name,email,phone,password})
-      .then((result)=>{
-        console.log(result)
-        navigate("/login")
-      })
-      .catch((error)=>{
-        console.log('Unable to register user')
-      })
+      try{
+        const response = await axios.post('http://localhost:3001/register',{name,email,phone,password,answer})
+        // const response = await axios.post('https://karur-polymers-backend.onrender.com/register',{name,email,phone,password})
+        if(response.data.success){
+          toast.success("Registered successfully");
+          navigate("/login");
+        }else{
+          toast.error(response.data.message);
+        }
+      }
+      catch(error){
+        console.log('Unable to register user');
+        toast.error(error.toString());
+      }
     }else{
       setErrors(errors);
     }
   };
 
   return (
+    <>
+    <Toaster position="top-right" reverseOrder={false}/>
     <div className="container">
       <div className="register_container_left"></div>
       <div className="container_right">
@@ -65,7 +75,7 @@ export function RegisterPage() {
             <TextField required className="input" type="email" label="Email" name="email" 
             value={formData.email} onChange={handleChange} />
             {errors.email && <p className="error-message">{errors.email}</p>}
-            <TextField required className="input" type="number" label="Phone Number" name="phone" 
+            <TextField required className="input" type="tel" label="Phone Number" name="phone" inputProps={{ maxLength: 10 }}
             value={formData.phone} onChange={handleChange} />
             {errors.phone && <p className="error-message">{errors.phone}</p>}
             <TextField required className="input" type="password" label="Password" name="password" 
@@ -73,6 +83,8 @@ export function RegisterPage() {
             {errors.password && <p className="error-message">{errors.password}</p>}
             <TextField required className="input" type="password" label="Confirm Password" name="confirmPassword" 
             value={formData.confirmPassword} onChange={handleChange} />
+            <TextField required className="input" type="text" label="What is your favorite sport" name="answer" 
+            value={formData.answer} onChange={handleChange} />
             {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
             <button className="submit_btn" id="register_btn">Register</button>
           </form>
@@ -83,8 +95,17 @@ export function RegisterPage() {
               <span>Google</span>
             </div>
           </div>
+          <button
+              className="back"
+              onClick={() => {
+                navigate(-1);
+              }}
+            >
+              <i class="ri-arrow-left-s-line" /> Back
+            </button>
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -1,36 +1,13 @@
 import '../Components/HomePage.css';
 import React, { useEffect } from 'react';
 import ScrollReveal from 'scrollreveal';
-import {Link, useNavigate} from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import {useAuth} from  '../Context/Auth';
+import Layout from '../Components/Layout/Layout';
 
 export function HomePage(){
-    const navigate = useNavigate();
-    const isUserSignedIn = !!localStorage.getItem('token');
-
-    const handleLogout = () =>{
-        localStorage.removeItem('token');
-        navigate('/');
-        window.location.reload();
-    }
-
+    const [auth] = useAuth()
     useEffect(() => {
-        const menuBtn = document.getElementById("menu-btn");
-        const navLinks = document.getElementById("nav-links");
-        const menuBtnIcon = menuBtn.querySelector("i");
-      
-        menuBtn.addEventListener("click", (e) => {
-          console.log("click");
-          navLinks.classList.toggle("open");
-      
-          const isOpen = navLinks.classList.contains("open");
-          menuBtnIcon.setAttribute("class", isOpen ? "ri-close-line" : "ri-menu-line");
-        });
-      
-        navLinks.addEventListener("click", (e) => {
-          navLinks.classList.remove("open");
-          menuBtnIcon.setAttribute("class", "ri-menu-line");
-        });
-      
         const scrollRevealOption = {
           distance: "50px",
           origin: "bottom",
@@ -58,33 +35,10 @@ export function HomePage(){
       }, []);       
 
     return(
-        <>
+        <Layout>
+            <Toaster position="top-right" reverseOrder={false}/>
+            <pre>{JSON.stringify(auth,null,4)}</pre>
             <header className="header">
-                <nav>
-                    <div className="nav__logo">
-                        <img src="../assets/logo.png" alt="logo"/>
-                    </div>
-                    <ul className="nav__links" id="nav-links">
-                        <li className="link"><a href="#home">Home</a></li>
-                        <li className="link"><a href="#choose">About</a></li>
-                        <li className="link"><a href="#craft">Products</a></li>
-                        <li className="link"><a href="#contact">Contact Us</a></li>
-                        {isUserSignedIn ? (
-                            <>
-                                <li className="link"><Link to='/dashboard'>Dashboard</Link></li>
-                                <li><button onClick={handleLogout}>Logout</button></li>
-                            </>
-                        ):(
-                            <>
-                                <li className="link"><Link to='/login'>Login</Link></li>
-                                <li className="link"><Link to='/register'>Register</Link></li>
-                            </>
-                        )}
-                    </ul>
-                    <div className="nav__menu__btn" id="menu-btn">
-                        <span><i className="ri-menu-line"></i></span>
-                    </div>
-                </nav>
                 <div className="section__container header__container" id="home">
                     <h1>Wrap It, Seal It, Love It</h1>
                     <p> Find the perfect cello tape for all your packaging needs at Karur
@@ -206,21 +160,7 @@ export function HomePage(){
                         referrerPolicy="no-referrer-when-downgrade"></iframe>
                 </div>
                 </section>    
-                
-                <footer className="footer">
-                <div className="section__container footer__container">
-                    <div className="footer__logo">
-                        <h4><a href="#home">Karur Polymers</a></h4>
-                        <p>Copyright © 2023 Cello Tape Sales. All rights reserved.</p>
-                    </div>
-                    <ul className="footer__nav">
-                        <li className="footer__link"><a href="#choose">About</a></li>
-                        <li className="footer__link"><a href="#contact">Contact</a></li>
-                        <li className="footer__link"><a href="#privacy">Privacy Policy</a></li>
-                    </ul>
-                </div>
-            </footer>
-        </>
+        </Layout>
     );
 }
 

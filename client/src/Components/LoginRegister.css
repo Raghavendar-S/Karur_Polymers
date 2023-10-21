@@ -27,6 +27,13 @@
   background-repeat: no-repeat;
 }
 
+.forgot_container_left {
+  background: url("../../public/assets/forgot.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
 .container_right {
   padding: 1rem;
   display: flex;
@@ -106,6 +113,19 @@ form button {
 
 form button:hover {
   background-color: var(--cyan-color-dark);
+}
+
+.back {
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+  color: var(--white);
+  background-color: #000;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 #register_btn{
