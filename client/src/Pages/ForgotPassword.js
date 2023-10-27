@@ -1,40 +1,44 @@
-import React, { useState } from "react";
+import React from "react";
 import "../Components/LoginRegister.css";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { useRecovery } from "../Context/Recovery";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
+  const { email, setEmail, setOTP } = useRecovery();
 
-  const [formData, setFormData] = useState({
-    email: "",
-    newPassword: "",
-    answer: "",
-  });
+  function navigateToOtp() {
+    if (email) {
+      const OTP = Math.floor(Math.random() * 9000 + 1000);
+      console.log(OTP);
+      setOTP(OTP);
 
-  const { email, newPassword, answer } = formData;
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+      axios
+        .post("http://localhost:3001/send_recovery_email", {
+          OTP,
+          recipient_email: email,
+        })
+        .then(() => navigate("/otp_input"))
+        .catch(console.log);
+      return;
+    }
+    return alert("Please enter your email");
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
         "http://localhost:3001/forgot-password",
-        { email, newPassword, answer }
+        { email }
       );
-      // const response = await axios.post('https://karur-polymers-backend.onrender.com/login',{email,password})
-      if (response && response.data.success) {
-        toast.success("Password Reset successfully");
-        navigate("/login");
+      if (response.data.success) {
+        console.log("Email is verified");
+        toast.success("Email is verified");
+        navigateToOtp();
       } else {
         toast.error(response.data.message);
       }
@@ -46,9 +50,9 @@ export default function ForgotPassword() {
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position="top-right" reverseOrder={false}/>
       <div className="container">
-        <div className="forgot_container_left"></div>
+        <div className="left_container" id="forgot"></div>
         <div className="container_right">
           <div className="content">
             <p className="heading">Forgot Password Page</p>
@@ -59,28 +63,9 @@ export default function ForgotPassword() {
                 type="email"
                 label="Email "
                 name="email"
-                value={formData.email}
-                onChange={handleChange}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
-              <TextField
-                required
-                className="input"
-                type="text"
-                label="New Password "
-                name="newPassword"
-                value={formData.newPassword}
-                onChange={handleChange}
-              />
-              <TextField
-                required
-                className="input"
-                type="text"
-                label="Enter your favorite Sport "
-                name="answer"
-                value={formData.answer}
-                onChange={handleChange}
-              />
-
               <button className="submit_btn" type="submit">
                 Submit
               </button>
@@ -90,7 +75,7 @@ export default function ForgotPassword() {
                   navigate(-1);
                 }}
               >
-                <i class="ri-arrow-left-s-line" /> Back
+                <i className="ri-arrow-left-s-line" /> Back
               </button>
             </form>
           </div>

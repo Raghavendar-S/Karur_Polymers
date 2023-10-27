@@ -3,6 +3,8 @@ import React from "react";
 import "./NavbarFooter.css";
 import toast from "react-hot-toast";
 import { useAuth } from "../../Context/Auth";
+import Badge from "@mui/material/Badge";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 export function Navbar() {
   const [auth, setAuth] = useAuth();
@@ -13,6 +15,7 @@ export function Navbar() {
       ...auth,
       user: null,
       token: "",
+      cart:[]
     });
     localStorage.removeItem("auth");
     localStorage.removeItem("token");
@@ -24,7 +27,7 @@ export function Navbar() {
     <>
       <header className="navbar_header">
         <a href="/" className="logo">
-          <img src="../assets/logo.png" alt="logo" />
+          <img src="../../../assets/logo.png" alt="logo" />
         </a>
         <input type="checkbox" id="menu-bar" />
         <label htmlFor="menu-bar">
@@ -34,40 +37,40 @@ export function Navbar() {
           <ul>
             <li>
               <Link to="/">
-                <i class="ri-home-4-line"></i> Home
+                <i className="ri-home-4-line"></i> Home
               </Link>
             </li>
             <li>
               <Link to="/products">
-                <i class="ri-box-3-line"></i> Products
+                <i className="ri-box-3-line"></i> Products
               </Link>
             </li>
             <li>
               <a href="/#choose">
-                <i class="ri-information-line"></i> About Us
+                <i className="ri-information-line"></i> About Us
               </a>
             </li>
             <li>
               <a href="/#contact">
-                <i class="ri-contacts-book-line"></i> Contact
+                <i className="ri-contacts-book-line"></i> Contact
               </a>
             </li>
             {!auth.user ? (
               <>
                 <li>
                   <Link to="#">
-                    <i class="ri-user-line" /> Login / Register{" "}
-                    <i class="ri-arrow-drop-down-line" />
+                    <i className="ri-user-line" /> Login / Register{" "}
+                    <i className="ri-arrow-drop-down-line" />
                   </Link>
                   <ul>
                     <li>
                       <Link to="/login">
-                        <i class="ri-login-box-line" /> Login
+                        <i className="ri-login-box-line" /> Login
                       </Link>
                     </li>
                     <li>
                       <Link to="/register">
-                        <i class="ri-user-add-line" /> Register
+                        <i className="ri-user-add-line" /> Register
                       </Link>
                     </li>
                   </ul>
@@ -78,9 +81,9 @@ export function Navbar() {
                 <li>
                   <Link to="#">
                     {auth?.user?.name === "Admin" ? (
-                      <i class="ri-admin-line" />
+                      <i className="ri-admin-line" />
                     ) : (
-                      <i class="ri-user-line" />
+                      <i className="ri-user-line" />
                     )}{" "}
                     {auth?.user?.name}
                   </Link>
@@ -88,10 +91,11 @@ export function Navbar() {
                     <li>
                       <Link
                         to={`/dashboard/${
-                          auth?.user?.role === 1 ? "admin" : "user"
+                          auth?.user?.role === 1 ? "admin" : "profile"
                         }`}
                       >
-                        <i class="ri-dashboard-line" /> Dashboard
+                        <i className="ri-dashboard-line" />{" "}
+                        {auth?.user?.role === 1 ? "Dashboard" : "Profile"}
                       </Link>
                     </li>
                     <li>
@@ -100,6 +104,14 @@ export function Navbar() {
                       </button>
                     </li>
                   </ul>
+                </li>
+                <li>
+                  <Link to="/cart">
+                    <Badge badgeContent={auth.cart?.length} color="primary">
+                      <ShoppingCartIcon />
+                      Cart
+                    </Badge>
+                  </Link>
                 </li>
               </>
             )}

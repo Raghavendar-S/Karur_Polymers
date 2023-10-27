@@ -1,74 +1,108 @@
-import React,{useEffect,useState} from 'react'
-import './AdminDashboard.css';
-import Layout from '../../Components/Layout/Layout';
+import React, { useState } from "react";
+import "./AdminDashboard.css";
+import Layout from "../../Components/Layout/Layout";
 import AdminMenu from "./AdminMenu";
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import axios from "axios";
+import toast from "react-hot-toast";
+import TextField from "@mui/material/TextField";
+import { TextareaAutosize } from "@mui/base/TextareaAutosize";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateProduct() {
-  const [categories,setCategories] = useState([])
-  const [category,setCategory] = useState("")
-  const [photo,setPhoto] = useState("")
-  const [name,setName] = useState("")
-  const [description,setDescription] = useState("")
-  const [price,setPrice] = useState("")
-  const [quantity,setQuantity] = useState("")
-  const [shipping,setShipping] = useState("")
-  const [open, setOpen] = React.useState(false);
-  const handleClose = () => setOpen(false);
-  const [selected,setSelected] = useState(null);
+  const [photo, setPhoto] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const navigate = useNavigate();
 
-  const getAllCategory = async () => {
+  const handleCreate = async (e) => {
+    e.preventDefault();
     try {
-      const { data } = await axios.get(
-        "http://localhost:3001/category/get-category"
+      const productData = new FormData();
+      productData.append("name", name);
+      productData.append("description", description);
+      productData.append("price", price);
+      productData.append("photo", photo);
+
+      const { data } = await axios.post(
+        "http://localhost:3001/product/create-product/",
+        productData
       );
       if (data?.success) {
-        setCategories(data?.category);
+        toast.success("Product created successfully");
+        navigate("/dashboard/admin/product");
+      } else {
+        toast.error(data?.message);
       }
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong while getting categories");
+      toast.error(`Something went wrong ${error.toString()}`);
     }
   };
 
-  useEffect(() => {
-    getAllCategory();
-  });
-
   return (
     <Layout>
-    <div className="admin_container">
-      <div className="row">
-        <div className="col" style={{ width: "40%" }}>
-          <AdminMenu/>
+      <div className="admin_container">
+        <div className="admin_menu">
+          <AdminMenu />
         </div>
-        <div className="col" style={{ width: "60%" }}>
+        <div className="admin_right_container">
           <div className="card">
-            <h1>Manage product</h1>
-            <div style={{marginTop:"10px",textAlign:"center"}}>
-            <FormControl style={{ width: '80%' }}>
-              <InputLabel id="demo-simple-select-label">Select a category</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Select a category"
-                onChange={(value) => {setCategory(value)}}
-              >
-                {categories?.map((c) => (
-                  <MenuItem key={c._id} value={c.name}>{c.name}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <h1 className="text-center">Create product</h1><br/>
+            <div className="text-center">
+              <label className="custom-label">
+                {photo ? photo.name : "Upload Photo"}
+                <input
+                  type="file"
+                  name="photo"
+                  accept="image/*"
+                  onChange={(e) => setPhoto(e.target.files[0])}
+                  hidden
+                />
+              </label>
+              {photo && (
+                <div className="text_center">
+                  <img
+                    src={URL.createObjectURL(photo)}
+                    alt="product_photo"
+                    className="custom-img"
+                  />
+                </div>
+              )}
+              <form>
+                <TextField
+                  required
+                  type="text"
+                  label="Enter name:"
+                  name="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <TextareaAutosize
+                  required
+                  minRows={4}
+                  className="textarea"
+                  placeholder="Enter description:"
+                  name="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+                <TextField
+                  required
+                  type="number"
+                  label="Enter price:"
+                  name="price"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+              </form>
+              <button className="admin_btn" id="create_btn" onClick={handleCreate}>
+                <i className="ri-file-edit-line"/> Create Product
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
     </Layout>
-  )
+  );
 }

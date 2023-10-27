@@ -4,7 +4,7 @@ const slugify = require('slugify');
 
 const createProductController = async(req,res) => {
     try{
-        const {name,description,category,quantity,price,shipping} = req.fields
+        const {name,description,price} = req.fields
         const {photo} = req.files
 
         //validation
@@ -15,12 +15,8 @@ const createProductController = async(req,res) => {
                 return res.status(500).send({error:'Description is required'})
             case !price:
                 return res.status(500).send({error:'Price is required'})
-            case !category:
-                return res.status(500).send({error:'Category is required'})
-            case !quantity:
-                return res.status(500).send({error:'Quantity is required'})
-            case photo && photo.size>1000000:
-                return res.status(500).send({error:'Photo is required and should be less than 1mb'});               
+            case photo && photo.size>50000000:
+                return res.status(500).send({error:'Photo is required and should be less than 50mb'});               
         }
 
         const products = new productModel({...req.fields,slug:slugify(name)})
@@ -47,12 +43,12 @@ const createProductController = async(req,res) => {
 
 const getProductController = async(req,res) => {
     try{
-        const products = await productModel.find({}).populate('category').select("-photo").limit(12).sort({createdAt:-1})
+        const products = await productModel.find({}).select("-photo").limit(12).sort({createdAt:-1})
         res.status(200).send({
             success:true,
             countTotal: products.length,
             message:"All products",
-            products
+            products,
         })
     }catch(error){
         console.log(error)
@@ -66,7 +62,7 @@ const getProductController = async(req,res) => {
 
 const getSingleProductController = async(req,res) => {
     try{
-        const product = await productModel.findOne({slug:req.params.slug}).select('-photo').populate("category")
+        const product = await productModel.findOne({slug:req.params.slug}).select('-photo')
         res.status(200).send({
             success:true,
             message:'Single Product fetched',
@@ -118,7 +114,7 @@ const deleteProductController = async(req,res) => {
 
 const updateProductController = async (req, res) => {
     try {
-        const { name, description, category, quantity, price, shipping } = req.fields;
+        const { name, description, price } = req.fields;
         const { photo } = req.files;
 
         // Validation
@@ -129,12 +125,8 @@ const updateProductController = async (req, res) => {
                 return res.status(500).send({ error: 'Description is required' });
             case !price:
                 return res.status(500).send({ error: 'Price is required' });
-            case !category:
-                return res.status(500).send({ error: 'Category is required' });
-            case !quantity:
-                return res.status(500).send({ error: 'Quantity is required' });
-            case photo && photo.size > 1000000:
-                return res.status(500).send({ error: 'Photo is required and should be less than 1mb' });
+            case photo && photo.size > 50000000:
+                return res.status(500).send({ error: 'Photo is required and should be less than 50mb' });
         }
 
         const products = await productModel.findByIdAndUpdate(

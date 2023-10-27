@@ -7,10 +7,10 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
+import toast, {Toaster} from "react-hot-toast";
 import { useAuth } from "../Context/Auth";
 
-export function LoginPage() {
+export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -65,9 +65,9 @@ export function LoginPage() {
 
   return (
     <>
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position="top-right" reverseOrder={false}/>
       <div className="container">
-        <div className="login_container_left"></div>
+        <div className="left_container" id="login"></div>
         <div className="container_right">
           <div className="content">
             <p className="heading">Login Page</p>
@@ -128,7 +128,7 @@ export function LoginPage() {
                 navigate(-1);
               }}
             >
-              <i class="ri-arrow-left-s-line" /> Back
+              <i className="ri-arrow-left-s-line" /> Back
             </button>
           </div>
         </div>

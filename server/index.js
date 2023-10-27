@@ -2,11 +2,10 @@ const express = require("express")
 const mongoose = require("mongoose")
 const cors = require("cors")
 const bodyParser = require("body-parser")
-const User = require("./Models/UserSchema")
 const dotenv = require("dotenv")
 const authRoute = require("./Routes/authRoute")
-const categoryRoute = require("./Routes/CategoryRoutes")
 const productRoute = require("./Routes/productRoutes")
+const OtherDetailsRoute = require("./Routes/OtherDetailsRoute")
 
 dotenv.config()
 
@@ -31,14 +30,6 @@ app.use(cors())
 
 //routes
 app.use('/',authRoute);
-app.use('/category',categoryRoute);
 app.use('/product',productRoute);
+app.use('/other',OtherDetailsRoute);
 
-app.get('/register', async(req,res)=>{
-    try{
-        const users = await User.find()
-        res.send({users})
-    }catch(error){
-        res.send({error:'Unable to get users'})
-    }
-})

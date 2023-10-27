@@ -1,12 +1,12 @@
 import '../Components/HomePage.css';
 import React, { useEffect } from 'react';
 import ScrollReveal from 'scrollreveal';
-import { Toaster } from 'react-hot-toast';
-import {useAuth} from  '../Context/Auth';
 import Layout from '../Components/Layout/Layout';
+import { useNavigate } from 'react-router-dom';
 
-export function HomePage(){
-    const [auth] = useAuth()
+export default function HomePage(){
+    const navigate = useNavigate();
+
     useEffect(() => {
         const scrollRevealOption = {
           distance: "50px",
@@ -36,14 +36,12 @@ export function HomePage(){
 
     return(
         <Layout>
-            <Toaster position="top-right" reverseOrder={false}/>
-            <pre>{JSON.stringify(auth,null,4)}</pre>
             <header className="header">
                 <div className="section__container header__container" id="home">
                     <h1>Wrap It, Seal It, Love It</h1>
                     <p> Find the perfect cello tape for all your packaging needs at Karur
                     Polymers - your online store for quality adhesive solutions. </p>
-                    <button>Shop Now</button>
+                    <button onClick={() => navigate('/products')}>Shop Now</button>
                     <div className="arrow-down">
                         <a href="#choose"><i className="ri-arrow-down-double-line"></i></a>
                     </div>
@@ -127,7 +125,7 @@ export function HomePage(){
                     <p className="section__subheader">
                         Discover our products to elevate your packaging style with quality cello tapes.
                     </p>
-                    <button className="btn">Explore Now</button>
+                    <button className="btn" onClick={() => navigate('/products')}>Explore Now</button>
                     </div>
                 </div>
                 <div className="offer__grid__bottom">
@@ -152,7 +150,7 @@ export function HomePage(){
                     <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3916.9931902845233!2d78.07159809678956!3d10.963886100000025!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3baa2fac2291a2b9%3A0xb5a79d821e42d96c!2sKarur%20Polymers%20Private%20Limited!5e0!3m2!1sen!2sin!4v1696235275636!5m2!1sen!2sin"
                         width="100%"
-                        height="450"
+                        height="450px"
                         style={{ border: "0" }}
                         allowFullScreen
                         loading="lazy"
